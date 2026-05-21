@@ -1,13 +1,27 @@
-from limpeza import carregarDados
-from busca_textual import preparar_dataframe
-from busca_textual import buscar_alimento
+from fastapi import FastAPI
+from pydantic import BaseModel
+from resultado import recomendar_alimentos
+from fastapi.middleware.cors import CORSMiddleware
 
-df, colunas_nutricionais = carregarDados()
-df = preparar_dataframe(df)
+class alimento(BaseModel):
+    alimento: str
+    objetivo: str
 
-resultado = buscar_alimento(
-    df,
-    "file mingnon"
+app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["POST", "GET"],
+    allow_headers=["Content-Type", "Authorization"],
 )
 
-print(resultado)
+@app.post('/recomendar')
+def comparar(data: alimento):
+    resultado = recomendar_alimentos (
+        nome_alimento=data.alimento,
+        objetivo=data.objetivo
+    )
+
+    return resultado
