@@ -29,7 +29,7 @@ objetivos = {
         "mais_vitamina_c":   ("Vitamina.C..mg.",     "desc"),
     }
 
-def rankear_por_objetivo(df, indice_base, x_normalizado, similaridades, objetivo=None, pool=50, top_n=5):
+def rankear_por_objetivo(df, indice_base, x_normalizado, similaridades, objetivo=None, pool=50, top_n=10):
     ranking_bruto = similaridades.argsort()[::-1]
     categoria_base = df.iloc[indice_base]["Categoria do alimento"]
     categorias_permitidas = GRUPOS_SIMILARES.get(categoria_base, [categoria_base])
@@ -57,12 +57,24 @@ def rankear_por_objetivo(df, indice_base, x_normalizado, similaridades, objetivo
     valores = [df.iloc[inx][coluna] for inx in indices_pool]
     v_min, v_max = min(valores), max(valores)
 
+    # Ordena o pool diretamente pelo valor nutricional do objetivo
+    # desc = maior valor primeiro (mais_proteina, mais_fibra, etc.)
+    # asc  = menor valor primeiro (menos_calorias, menos_gordura, etc.)
+    pares = list(zip(indices_pool, valores))
+    pares.sort(key=lambda x: x[1], reverse=(ordem == "desc"))
+
+    # Pega os top_n já ordenados pelo objetivo
+    top_pares = pares[:int(top_n)]
+
+    # Recalcula min/max apenas do top para o score visual (barra de progresso)
+    top_valores = [v for _, v in top_pares]
+
     resultados = []
-    for inx, valor in zip(indices_pool, valores):
+    for inx, valor in top_pares:
         linha = df.iloc[inx]
         sim = similaridades[inx]
 
-        # score nutricional normalizado: 1 = melhor para o objetivo
+        # score_final normalizado 0-1 para a barra visual (1 = melhor)
         if v_max != v_min:
             score_nutricional = (valor - v_min) / (v_max - v_min)
             if ordem == "asc":
@@ -70,18 +82,13 @@ def rankear_por_objetivo(df, indice_base, x_normalizado, similaridades, objetivo
         else:
             score_nutricional = 1.0
 
-        # 60% similaridade + 40% objetivo nutricional
-        score_final = 0.6 * sim + 0.4 * score_nutricional
-
         resultados.append({
             "indice": int(inx),
             "nome": str(linha["Descrição dos alimentos"]),
             "similaridade": float(round(sim, 3)),
             "valor_objetivo": float(round(valor, 2)),
             "objetivo": str(objetivo),
-            "score_final": float(round(score_final, 3)),
+            "score_final": float(round(score_nutricional, 3)),
         })
 
-
-    resultados.sort(key=lambda x: x["score_final"], reverse=True)
-    return resultados[:int(top_n)]
+    return resultados
