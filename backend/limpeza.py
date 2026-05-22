@@ -38,12 +38,44 @@ def carregarDados():
 
     df[colunas_alto_nulos] = df[colunas_alto_nulos].fillna(df[colunas_alto_nulos].median())
 
+    # Filtra alimentos crus na categoria de carnes
+    is_carne = df['Categoria do alimento'] == 'Carnes e derivados'
+    descricao_lower = df['Descrição dos alimentos'].str.lower()
+    is_cru = descricao_lower.str.endswith(('cru', 'crua', 'cruas', 'cruo', 'cruos'))
+    df = df[~(is_carne & is_cru)].reset_index(drop=True)
+
     indetificadores = df[['Descrição dos alimentos', 'Categoria do alimento']].copy()
 
     X = df[colunas_nutricionais].to_numpy(dtype=float)
 
     return df, colunas_nutricionais, X
 
-    
+def getCaloriasporAlimento(df, nome_alimento):
+    from busca_textual import preparar_dataframe, buscar_alimento
+
+    df_preparado = preparar_dataframe(df.copy())
+    resultados = buscar_alimento(df_preparado, nome_alimento, top_n=1)
+
+    if not resultados or resultados[0]['score'] == 0:
+        raise ValueError(f"Alimento '{nome_alimento}' nao encontrado")
+
+    indice = resultados[0]['indice']
+    calorias = df.iloc[indice]['Energia..kcal.']
+    descricao = df.iloc[indice]['Descrição dos alimentos']
+    return calorias, descricao
+
+def calcularTempoGasto(calorias, peso_kg):
+    ATIVIDADES_MET = {
+        'caminhada': 3.5,
+        'corrida': 8.0,
+        'ciclismo': 6.0,
+        'natacao': 7.0,
+        'musculacao': 5.0,
+    }
+    resultados = {}
+    for atividade, met in ATIVIDADES_MET.items():
+        tempo_minutos = round((calorias / (met * peso_kg)) * 60)
+        resultados[atividade] = tempo_minutos
+    return resultados
 
 

@@ -1,115 +1,137 @@
 /* ============================
-   App Layout
+   Decorative Blobs
    ============================ */
 
-.app-wrapper {
-  min-height: 100vh;
-  position: relative;
-  overflow: hidden;
-}
-
-/* Decorative background blobs */
 .blob-green {
-  position: absolute;
+  position: fixed;
   top: -120px;
   left: -80px;
-  width: 400px;
-  height: 400px;
-  background: radial-gradient(circle, rgba(61,122,75,0.25) 0%, transparent 70%);
+  width: 480px;
+  height: 480px;
+  background: radial-gradient(circle, rgba(61,122,75,0.28) 0%, transparent 70%);
   border-radius: 50%;
   pointer-events: none;
   z-index: 0;
 }
 
 .blob-lime {
-  position: absolute;
+  position: fixed;
   top: -60px;
   right: -100px;
-  width: 350px;
-  height: 350px;
-  background: radial-gradient(circle, rgba(200,242,90,0.08) 0%, transparent 70%);
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(200,242,90,0.10) 0%, transparent 70%);
   border-radius: 50%;
   pointer-events: none;
   z-index: 0;
 }
 
 /* ============================
-   Header
+   Shell (topbar + body grid)
    ============================ */
 
-.header {
-  text-align: center;
-  padding: 3rem 1.5rem 2rem;
+.shell {
+  display: grid;
+  grid-template-rows: 64px 1fr;
+  min-height: 100vh;
   position: relative;
   z-index: 1;
-  background: radial-gradient(ellipse at top, rgba(61,122,75,0.15) 0%, transparent 60%);
 }
 
-.header-leaf {
-  font-size: 2.5rem;
-  margin-bottom: 0.5rem;
+/* ============================
+   Top Bar
+   ============================ */
+
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 0 28px;
+  background: rgba(28, 31, 24, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(90, 169, 104, 0.18);
 }
 
-.header-title {
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.leaf {
+  font-size: 1.5rem;
+  animation: leafFloat 4s ease-in-out infinite;
+}
+
+.brand-title {
   font-family: var(--font-display);
-  font-size: clamp(2rem, 5vw, 3.2rem);
   font-weight: 700;
   color: var(--color-cream);
-  letter-spacing: -0.02em;
-  margin-bottom: 0.25rem;
+  font-size: 1.35rem;
+  letter-spacing: -0.01em;
 }
 
-.header-tagline {
-  font-family: var(--font-body);
-  font-weight: 300;
+.brand-tag {
   font-style: italic;
-  font-size: 1rem;
+  font-weight: 300;
+  font-size: 0.8rem;
   color: var(--color-mint);
   opacity: 0.85;
-}
-
-.header-divider {
-  width: 80px;
-  height: 3px;
-  margin: 1.25rem auto 0;
-  border-radius: 2px;
-  background: linear-gradient(90deg, var(--color-sprout), var(--color-lime-glow));
+  border-left: 1px solid rgba(168, 213, 162, 0.25);
+  padding-left: 12px;
+  margin-left: 4px;
 }
 
 /* ============================
-   Main Content
+   Body Grid (sidebar + main)
    ============================ */
 
-.main-content {
-  max-width: 520px;
-  margin: 0 auto;
-  padding: 0 1.5rem 2rem;
-  position: relative;
-  z-index: 1;
+.body {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 20px;
+  padding: 20px;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .body {
+    grid-template-columns: 1fr;
+  }
+}
+
+.left {
+  display: grid;
+  grid-template-rows: auto auto;
+  gap: 20px;
+}
+
+.main {
+  align-self: start;
+  padding: 1.75rem 1.5rem 1rem;
 }
 
 /* ============================
-   Form
+   Form Card
    ============================ */
 
 .form-card {
-  padding: 2rem;
+  padding: 1.75rem;
   border-left: 3px solid var(--color-lime-glow);
-  position: relative;
-  overflow: hidden;
 }
 
 .form-group {
-  margin-bottom: 1.25rem;
+  margin-bottom: 1.1rem;
 }
 
-.form-group--large {
+.form-group:last-of-type {
   margin-bottom: 1.5rem;
 }
 
 .form-label {
   display: block;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--color-sprout);
@@ -126,21 +148,20 @@
   left: 14px;
   top: 50%;
   transform: translateY(-50%);
-  color: var(--color-sprout);
   pointer-events: none;
   z-index: 1;
   font-size: 1rem;
 }
 
 .input-with-icon {
-  padding-left: 2.75rem;
+  padding-left: 2.6rem;
 }
 
 .btn-full-width {
   width: 100%;
 }
 
-/* Loading spinner inside button */
+/* Loading spinner */
 .btn-spinner {
   width: 18px;
   height: 18px;
@@ -163,21 +184,149 @@
 }
 
 /* ============================
-   Ranking Section
+   Panel (Gasto Calorico card)
+   ============================ */
+
+.panel {
+  padding: 1.5rem;
+}
+
+.panel-title {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  color: var(--color-cream);
+  margin-bottom: 0.15rem;
+}
+
+.panel-form-group {
+  margin-bottom: 0;
+  margin-top: 1rem;
+}
+
+.input-unit {
+  position: relative;
+}
+
+.unit {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--color-sprout);
+  pointer-events: none;
+}
+
+.input-num {
+  padding-right: 2.4rem;
+  font-family: var(--font-mono);
+}
+
+.btn-calc {
+  margin-top: 1.25rem;
+}
+
+/* ============================
+   Activity Results
+   ============================ */
+
+.activity-result {
+  margin-top: 1rem;
+  animation: fadeInUp 0.4s ease both;
+}
+
+.activity-hint {
+  font-size: 0.72rem;
+  color: var(--color-mint);
+  opacity: 0.75;
+  margin-bottom: 0.65rem;
+  font-style: italic;
+  text-align: center;
+}
+
+.activity-hint strong {
+  color: var(--color-lime-glow);
+  font-style: normal;
+  font-family: var(--font-mono);
+  font-weight: 500;
+}
+
+.activity-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.activity-card {
+  background: rgba(200, 242, 90, 0.05);
+  border: 1px solid rgba(200, 242, 90, 0.18);
+  border-radius: var(--radius-input);
+  padding: 0.75rem 0.7rem;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.act-emoji {
+  font-size: 1.4rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.act-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.act-label {
+  font-size: 0.62rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-sprout);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.act-num {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.act-value {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--color-lime-glow);
+  line-height: 1;
+}
+
+.act-unit {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--color-sand);
+  opacity: 0.7;
+}
+
+/* ============================
+   Ranking Section (main)
    ============================ */
 
 .ranking-section {
-  margin-top: 2rem;
   scroll-margin-top: 1rem;
 }
 
 .ranking-header {
   text-align: center;
   margin-bottom: 1.25rem;
+  padding: 0 1rem;
 }
 
 .ranking-header-label {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--color-sprout);
@@ -186,21 +335,37 @@
 
 .ranking-header-title {
   font-family: var(--font-display);
-  font-size: 1.1rem;
+  font-size: 1.5rem;
   color: var(--color-cream);
-  margin-top: 0.25rem;
+  margin-top: 0.35rem;
 }
 
 .ranking-header-goal {
   color: var(--color-sand);
   font-family: var(--font-body);
-  font-size: 0.9rem;
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+.ranking-divider {
+  width: 80px;
+  height: 3px;
+  margin: 1rem auto 0;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--color-sprout), var(--color-lime-glow));
 }
 
 .ranking-list {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 0.75rem;
+  padding-bottom: 1rem;
+}
+
+@media (max-width: 1100px) {
+  .ranking-list {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* Ranking card */
@@ -208,8 +373,7 @@
   display: flex;
   align-items: center;
   gap: 1rem;
-  padding: 1.25rem;
-  cursor: default;
+  padding: 1.1rem 1.25rem;
   transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -230,7 +394,7 @@
   justify-content: center;
   font-family: var(--font-mono);
   font-weight: 700;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   line-height: 1.1;
   flex-shrink: 0;
 }
@@ -267,9 +431,8 @@
 }
 
 .rank-name {
-  font-family: var(--font-body);
   font-weight: 500;
-  font-size: 1rem;
+  font-size: 0.95rem;
   color: var(--color-cream);
   margin-bottom: 0.35rem;
   white-space: nowrap;
@@ -289,7 +452,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   margin-bottom: 0.5rem;
 }
 
@@ -298,11 +461,14 @@
   color: var(--color-sand);
 }
 
+.rank-value strong {
+  color: var(--color-cream);
+}
+
 .rank-score {
   font-family: var(--font-mono);
   color: var(--color-lime-glow);
   font-weight: 500;
-  animation: scoreCount 0.4s ease both;
 }
 
 /* Progress bar */
@@ -327,7 +493,6 @@
    ============================ */
 
 .empty-state {
-  margin-top: 2rem;
   padding: 2.5rem 1.5rem;
   text-align: center;
 }
@@ -347,14 +512,20 @@
    ============================ */
 
 .skeleton-list {
-  margin-top: 2rem;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 0.75rem;
+  padding-bottom: 1rem;
+}
+
+@media (max-width: 1100px) {
+  .skeleton-list {
+    grid-template-columns: 1fr;
+  }
 }
 
 .skeleton-card {
-  padding: 1.25rem;
+  padding: 1.1rem 1.25rem;
   display: flex;
   gap: 1rem;
   align-items: center;
@@ -393,4 +564,33 @@
   height: 4px;
   border-radius: 4px;
   animation-delay: 0.3s;
+}
+
+/* ============================
+   Idle placeholder for main
+   ============================ */
+
+.idle-placeholder {
+  text-align: center;
+  padding: 3rem 1.5rem;
+}
+
+.idle-placeholder__icon {
+  font-size: 2.5rem;
+  margin-bottom: 0.75rem;
+  opacity: 0.6;
+}
+
+.idle-placeholder__title {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  color: var(--color-cream);
+  margin-bottom: 0.35rem;
+}
+
+.idle-placeholder__text {
+  color: var(--color-mint);
+  font-size: 0.85rem;
+  opacity: 0.7;
+  font-style: italic;
 }

@@ -19,9 +19,16 @@ interface ResultItem {
   indice: number
   nome: string
   similaridade: number
-  valor_objetivo: number
-  objetivo: string
-  score_final: number
+  valor_objetivo?: number
+  objetivo?: string
+  score_final?: number
+}
+
+interface GastoResult {
+  caminhada: number
+  corrida: number
+  ciclismo: number
+  musculacao: number
 }
 
 type UIState = 'idle' | 'loading' | 'success' | 'error' | 'empty'
@@ -29,10 +36,14 @@ type UIState = 'idle' | 'loading' | 'success' | 'error' | 'empty'
 function App() {
   const [alimento, setAlimento] = useState('')
   const [option, setOption] = useState('')
+  const [peso, setPeso] = useState('72')
   const [resposta, setResposta] = useState<ResultItem[]>([])
   const [alimentoBase, setAlimentoBase] = useState('')
   const [uiState, setUiState] = useState<UIState>('idle')
   const [errorMsg, setErrorMsg] = useState('')
+  const [gastoResult, setGastoResult] = useState<GastoResult | null>(null)
+  const [gastoLoading, setGastoLoading] = useState(false)
+  const [gastoError, setGastoError] = useState('')
   const rankingRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
@@ -45,7 +56,7 @@ function App() {
 
   const handleRankear = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    if (!alimento.trim() || !option) return
+    if (!alimento.trim()) return
 
     setUiState('loading')
     setErrorMsg('')
@@ -78,119 +89,267 @@ function App() {
     }
   }
 
+  const handleGasto = async () => {
+    if (!alimento.trim() || !peso) return
+
+    setGastoLoading(true)
+    setGastoError('')
+    setGastoResult(null)
+
+    try {
+      const response = await fetch('http://localhost:8000/gastoCalorico', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ alimento, peso: parseFloat(peso) }),
+      })
+
+      if (!response.ok) {
+        throw new Error(`Erro na API: ${response.status}`)
+      }
+
+      const data = await response.json()
+      setGastoResult(data)
+    } catch (err) {
+      setGastoError(err instanceof Error ? err.message : 'Erro desconhecido')
+    } finally {
+      setGastoLoading(false)
+    }
+  }
+
   return (
-    <div className="app-wrapper">
-      {/* Decorative background blobs */}
+    <>
       <div className="blob-green" />
       <div className="blob-lime" />
 
-      {/* Header */}
-      <header className="header">
-        <div className="animate-leafFloat header-leaf">🌿</div>
-        <h1 className="header-title">Health Life</h1>
-        <p className="header-tagline">Descubra o que seu corpo precisa</p>
-        <div className="header-divider" />
-      </header>
-
-      {/* Form */}
-      <main className="main-content">
-        <form
-          onSubmit={handleRankear}
-          className="glass-card animate-fadeInUp form-card"
-        >
-          <div className="form-group">
-            <label className="form-label">Alimento</label>
-            <div className="input-wrapper">
-              <span className="input-icon">🔍</span>
-              <input
-                type="text"
-                className="input-organic input-with-icon"
-                placeholder="ex: aveia, frango, espinafre..."
-                value={alimento}
-                onChange={(e) => setAlimento(e.target.value)}
-                aria-label="Nome do alimento"
-              />
-            </div>
+      <div className="shell">
+        {/* Top bar */}
+        <header className="topbar">
+          <div className="brand">
+            <span className="leaf">🌿</span>
+            <span className="brand-title">Health Life</span>
           </div>
+          <span className="brand-tag">Descubra o que seu corpo precisa</span>
+        </header>
 
-          <div className="form-group form-group--large">
-            <label className="form-label">Objetivo nutricional</label>
-            <div className="input-wrapper">
-              <span className="input-icon">🎯</span>
-              <select
-                className="select-organic input-with-icon"
-                value={option}
-                onChange={(e) => setOption(e.target.value)}
-                aria-label="Objetivo nutricional"
-              >
-                <option value="">Selecione seu objetivo...</option>
-                {Object.entries(OBJETIVOS).map(([key, { label, emoji }]) => (
-                  <option key={key} value={key}>{emoji} {label}</option>
-                ))}
-              </select>
-            </div>
-          </div>
+        {/* Body: sidebar + main */}
+        <div className="body">
 
-          <button
-            type="submit"
-            className="btn-primary btn-full-width"
-            disabled={uiState === 'loading' || !alimento.trim() || !option}
-          >
-            {uiState === 'loading' ? (
-              <>
-                <span className="btn-spinner" />
-                <span>Analisando...</span>
-              </>
-            ) : (
-              <>
-                <span>Analisar Nutricao</span>
-                <span>→</span>
-              </>
-            )}
-          </button>
+          {/* Left sidebar */}
+          <aside className="left">
 
-          {uiState === 'error' && (
-            <div className="error-toast">{errorMsg}</div>
-          )}
-        </form>
+            {/* Form card — Alimento + Objetivo */}
+            <section className="glass-card form-card animate-fadeInUp">
+              <form onSubmit={handleRankear}>
+                <div className="form-group">
+                  <label className="form-label" htmlFor="alimento">Alimento</label>
+                  <div className="input-wrapper">
+                    <span className="input-icon">🔍</span>
+                    <input
+                      id="alimento"
+                      type="text"
+                      className="input-organic input-with-icon"
+                      placeholder="ex: aveia, frango, espinafre..."
+                      value={alimento}
+                      onChange={(e) => setAlimento(e.target.value)}
+                      aria-label="Nome do alimento"
+                    />
+                  </div>
+                </div>
 
-        {/* Results */}
-        {uiState === 'success' && resposta.length > 0 && (
-          <RankingList
-            resposta={resposta}
-            alimentoBase={alimentoBase}
-            option={option}
-            objetivos={OBJETIVOS}
-            rankingRef={rankingRef}
-          />
-        )}
+                <div className="form-group">
+                  <label className="form-label" htmlFor="objetivo">Objetivo nutricional</label>
+                  <div className="input-wrapper">
+                    <span className="input-icon">🎯</span>
+                    <select
+                      id="objetivo"
+                      className="select-organic input-with-icon"
+                      value={option}
+                      onChange={(e) => setOption(e.target.value)}
+                      aria-label="Objetivo nutricional"
+                    >
+                      <option value="">Selecione seu objetivo...</option>
+                      {Object.entries(OBJETIVOS).map(([key, { label, emoji }]) => (
+                        <option key={key} value={key}>{emoji} {label}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
 
-        {/* Empty state */}
-        {uiState === 'empty' && (
-          <div className="glass-card animate-fadeInUp empty-state">
-            <div className="empty-state__icon">🍃</div>
-            <p className="empty-state__text">
-              Nenhum resultado encontrado. Tente outro alimento!
-            </p>
-          </div>
-        )}
+                <button
+                  type="submit"
+                  className="btn-primary btn-full-width"
+                  disabled={uiState === 'loading' || !alimento.trim()}
+                >
+                  {uiState === 'loading' ? (
+                    <>
+                      <span className="btn-spinner" />
+                      <span>Analisando...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>Analisar Nutricao</span>
+                      <span>→</span>
+                    </>
+                  )}
+                </button>
 
-        {/* Loading skeleton */}
-        {uiState === 'loading' && (
-          <div className="skeleton-list">
-            {[...Array(3)].map((_, i) => (
-              <div key={i} className="glass-card skeleton-card">
-                <div className="skeleton-badge" />
-                <div className="skeleton-content">
-                  <div className="skeleton-line skeleton-line--title" />
-                  <div className="skeleton-line skeleton-line--bar" />
+                {uiState === 'error' && (
+                  <div className="error-toast">{errorMsg}</div>
+                )}
+              </form>
+            </section>
+
+            {/* Gasto Calorico card */}
+            <section className="glass-card panel animate-fadeInUp">
+              <h3 className="panel-title">Gasto calorico</h3>
+
+              <div className="panel-form-group">
+                <label className="form-label" htmlFor="peso">Peso</label>
+                <div className="input-unit">
+                  <input
+                    id="peso"
+                    type="number"
+                    className="input-organic input-num"
+                    value={peso}
+                    min={20}
+                    max={300}
+                    onChange={(e) => setPeso(e.target.value)}
+                    aria-label="Peso em kg"
+                  />
+                  <span className="unit">kg</span>
                 </div>
               </div>
-            ))}
-          </div>
-        )}
-      </main>
-    </div>
+
+              <button
+                type="button"
+                className="btn-primary btn-full-width btn-calc"
+                onClick={handleGasto}
+                disabled={gastoLoading || !alimento.trim() || !peso}
+              >
+                {gastoLoading ? (
+                  <>
+                    <span className="btn-spinner" />
+                    <span>Calculando...</span>
+                  </>
+                ) : (
+                  <>
+                    <span>Calcular gasto energetico</span>
+                    <span>→</span>
+                  </>
+                )}
+              </button>
+
+              {gastoError && (
+                <div className="error-toast">{gastoError}</div>
+              )}
+
+              {gastoResult && (
+                <div className="activity-result">
+                  <p className="activity-hint">
+                    Tempo para queimar as calorias de <strong>{alimento}</strong>
+                  </p>
+                  <div className="activity-grid">
+                    <div className="activity-card">
+                      <span className="act-emoji">🚶</span>
+                      <div className="act-info">
+                        <span className="act-label">Caminhada</span>
+                        <div className="act-num">
+                          <span className="act-value">{gastoResult.caminhada}</span>
+                          <span className="act-unit">min</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="activity-card">
+                      <span className="act-emoji">🏃</span>
+                      <div className="act-info">
+                        <span className="act-label">Corrida</span>
+                        <div className="act-num">
+                          <span className="act-value">{gastoResult.corrida}</span>
+                          <span className="act-unit">min</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="activity-card">
+                      <span className="act-emoji">🚴</span>
+                      <div className="act-info">
+                        <span className="act-label">Ciclismo</span>
+                        <div className="act-num">
+                          <span className="act-value">{gastoResult.ciclismo}</span>
+                          <span className="act-unit">min</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="activity-card">
+                      <span className="act-emoji">🏋️</span>
+                      <div className="act-info">
+                        <span className="act-label">Musculacao</span>
+                        <div className="act-num">
+                          <span className="act-value">{gastoResult.musculacao}</span>
+                          <span className="act-unit">min</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </section>
+
+          </aside>
+
+          {/* Main: ranking area */}
+          <main className="glass-card main animate-fadeInUp">
+            {uiState === 'success' && resposta.length > 0 && (
+              <RankingList
+                resposta={resposta}
+                alimentoBase={alimentoBase}
+                option={option}
+                objetivos={OBJETIVOS}
+                rankingRef={rankingRef}
+              />
+            )}
+
+            {uiState === 'empty' && (
+              <div className="empty-state">
+                <div className="empty-state__icon">🍃</div>
+                <p className="empty-state__text">
+                  Nenhum resultado encontrado. Tente outro alimento!
+                </p>
+              </div>
+            )}
+
+            {uiState === 'loading' && (
+              <div>
+                <div className="ranking-header">
+                  <p className="ranking-header-label">Carregando ranking...</p>
+                </div>
+                <div className="skeleton-list">
+                  {[...Array(6)].map((_, i) => (
+                    <div key={i} className="glass-card skeleton-card">
+                      <div className="skeleton-badge" />
+                      <div className="skeleton-content">
+                        <div className="skeleton-line skeleton-line--title" />
+                        <div className="skeleton-line skeleton-line--bar" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {uiState === 'idle' && (
+              <div className="idle-placeholder">
+                <div className="idle-placeholder__icon">🥗</div>
+                <p className="idle-placeholder__title">Seu ranking aparecera aqui</p>
+                <p className="idle-placeholder__text">
+                  Insira um alimento e selecione um objetivo para comecar
+                </p>
+              </div>
+            )}
+          </main>
+
+        </div>
+      </div>
+    </>
   )
 }
 

@@ -4,9 +4,9 @@ interface ResultItem {
   indice: number
   nome: string
   similaridade: number
-  valor_objetivo: number
-  objetivo: string
-  score_final: number
+  valor_objetivo?: number
+  objetivo?: string
+  score_final?: number
 }
 
 interface ObjetivoInfo {
@@ -33,7 +33,12 @@ function getBadgeClass(position: number): string {
 }
 
 function RankingList({ resposta, alimentoBase, option, objetivos, rankingRef }: RankingListProps) {
-  const scorePercent = (score: number) => Math.round(score * 100)
+  const hasGoal = !!option && !!objetivos[option]
+
+  const scorePercent = (item: ResultItem) => {
+    if (hasGoal && item.score_final != null) return Math.round(item.score_final * 100)
+    return Math.round(item.similaridade * 100)
+  }
 
   return (
     <section ref={rankingRef} className="ranking-section">
@@ -41,25 +46,32 @@ function RankingList({ resposta, alimentoBase, option, objetivos, rankingRef }: 
         <p className="ranking-header-label">Ranking para</p>
         <p className="ranking-header-title">
           {alimentoBase}
-          <span className="ranking-header-goal">
-            {' '} — {objetivos[option]?.label}
-          </span>
+          {hasGoal && (
+            <span className="ranking-header-goal">
+              {' '} — {objetivos[option].label}
+            </span>
+          )}
+          {!hasGoal && (
+            <span className="ranking-header-goal">
+              {' '} — Por similaridade
+            </span>
+          )}
         </p>
+        <div className="ranking-divider" />
       </div>
 
       <div className="ranking-list">
         {resposta.map((item, index) => {
           const position = index + 1
-          const score = scorePercent(item.score_final)
-          const obj = objetivos[item.objetivo]
+          const score = scorePercent(item)
+          const obj = item.objetivo ? objetivos[item.objetivo] : null
 
           return (
             <div
               key={item.indice}
-              className={`glass-card animate-rankReveal rank-card`}
-              style={{ animationDelay: `${index * 120}ms` }}
+              className="glass-card animate-rankReveal rank-card"
+              style={{ animationDelay: `${index * 80}ms` }}
             >
-              {/* Badge */}
               <div className={getBadgeClass(position)}>
                 <span>#{position}</span>
                 {MEDAL[position] && (
@@ -67,31 +79,38 @@ function RankingList({ resposta, alimentoBase, option, objetivos, rankingRef }: 
                 )}
               </div>
 
-              {/* Content */}
               <div className="rank-content">
                 <p className="rank-name">{item.nome}</p>
                 <div className="rank-divider" />
 
                 <div className="rank-stats">
                   <span className="rank-value">
-                    {obj?.label ?? item.objetivo}:{' '}
-                    <strong>{item.valor_objetivo}{obj?.unidade ?? ''}</strong>
+                    {hasGoal && item.valor_objetivo != null ? (
+                      <>
+                        {obj?.label ?? item.objetivo}:{' '}
+                        <strong>{item.valor_objetivo}{obj?.unidade ?? ''}</strong>
+                      </>
+                    ) : (
+                      <>
+                        Similaridade:{' '}
+                        <strong>{Math.round(item.similaridade * 100)}%</strong>
+                      </>
+                    )}
                   </span>
                   <span
                     className="rank-score"
-                    style={{ animationDelay: `${index * 120 + 300}ms` }}
+                    style={{ animationDelay: `${index * 80 + 300}ms` }}
                   >
                     Score: {score}%
                   </span>
                 </div>
 
-                {/* Progress bar */}
                 <div className="progress-track">
                   <div
                     className="progress-fill"
                     style={{
                       width: `${score}%`,
-                      animationDelay: `${index * 120 + 200}ms`,
+                      animationDelay: `${index * 80 + 150}ms`,
                     }}
                   />
                 </div>
