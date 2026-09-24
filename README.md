@@ -1,231 +1,60 @@
-Health_Life: Sistema de Recomendação de Alimentos Inteligente
-
-
-Visão Geral do Projeto
-
-O projeto Health_Life é um sistema inovador de recomendação de alimentos que utiliza técnicas de Machine Learning para oferecer sugestões personalizadas aos usuários. Desenvolvido com um backend robusto em FastAPI (Python) e um frontend dinâmico em React (TypeScript), o sistema visa auxiliar indivíduos na tomada de decisões alimentares mais saudáveis e alinhadas aos seus objetivos nutricionais.
-
-Através da aplicação de similaridade de cosseno, o sistema analisa as características nutricionais dos alimentos e os objetivos do usuário para gerar um ranking de recomendações. Além disso, oferece uma funcionalidade para calcular o gasto calórico estimado com base no consumo de alimentos e peso do usuário, proporcionando uma ferramenta completa para o gerenciamento da dieta.
-
-Funcionalidades Principais
-
-•
-Recomendação Personalizada de Alimentos: Sugere alimentos com base nas preferências e objetivos nutricionais do usuári
-
-•
-o, utilizando algoritmos de similaridade de cosseno.
-
-•
-Cálculo de Gasto Calórico: Estima o tempo necessário para queimar as calorias de um alimento específico, considerando o peso do usuário e diferentes atividades físicas.
-
-•
-Interface Intuitiva: Frontend desenvolvido em React para uma experiência de usuário fluida e responsiva.
-
-•
-API RESTful: Backend em FastAPI que expõe endpoints eficientes para a comunicação com o frontend e o processamento dos dados.
-
-Arquitetura do Sistema
-
-O Health_Life adota uma arquitetura de microsserviços, separando claramente as responsabilidades do backend e do frontend:
-
-•
-Backend (FastAPI): Responsável pela lógica de negócios, processamento de dados de Machine Learning (similaridade de cosseno), cálculo de gasto calórico e exposição da API RESTful. Utiliza Python e bibliotecas como pandas, numpy e scikit-learn para manipulação e análise de dados.
-
-•
-Frontend (React): Desenvolvido com React e TypeScript, oferece a interface de usuário interativa. Consome os dados e funcionalidades expostas pelo backend através de requisições HTTP.
-
-Tecnologias Utilizadas
-
-Backend
-
-•
-Python 3.10+: Linguagem de programação principal.
-
-•
-FastAPI: Framework web moderno e rápido para construção de APIs.
-
-•
-Uvicorn: Servidor ASGI para rodar aplicações FastAPI.
-
-•
-Pydantic: Para validação de dados e configurações.
-
-•
-Pandas: Manipulação e análise de dados.
-
-•
-NumPy: Suporte a operações numéricas de alto desempenho.
-
-•
-Scikit-learn: Implementação de algoritmos de Machine Learning (similaridade de cosseno).
-
-•
-FastAPI-CORS: Middleware para habilitar Cross-Origin Resource Sharing (CORS).
-
-Frontend
-
-•
-Node.js 18+: Ambiente de execução JavaScript.
-
-•
-React: Biblioteca JavaScript para construção de interfaces de usuário.
-
-•
-TypeScript: Superset de JavaScript que adiciona tipagem estática.
-
-•
-Vite: Ferramenta de build frontend rápida.
-
-•
-ESLint: Ferramenta para identificar e reportar padrões problemáticos encontrados no código JavaScript/TypeScript.
-
-Pré-requisitos
-
-Certifique-se de ter as seguintes ferramentas instaladas em seu ambiente de desenvolvimento:
-
-•
-Python 3.10+
-
-•
-Node.js 18+
-
-•
-npm (gerenciador de pacotes do Node.js)
-
-Instalação
-
-Siga os passos abaixo para configurar e rodar o projeto em sua máquina local.
-
-1. Clonar o Repositório
-
-Bash
-
-
-git clone https://github.com/pedroedu06/Health_Life.git
-cd Health_Life
-
-
-
-2. Configurar o Backend
-
-Navegue até o diretório backend e instale as dependências Python:
-
-Bash
-
-
-cd backend
-pip install -r requirements.txt
-
-
-
-3. Configurar o Frontend
-
-Navegue até o diretório public e instale as dependências Node.js:
-
-Bash
-
-
-cd ../public
-npm install
-
-
-
-Como Rodar
-
-Para iniciar o backend e o frontend, siga as instruções:
-
-1. Iniciar o Backend
-
-No diretório backend, execute o seguinte comando:
-
-Bash
-
-
-cd backend
-python -m uvicorn main:app --reload
-
-
-
-O servidor da API estará disponível em http://localhost:8000.
-
-2. Iniciar o Frontend
-
-Em um novo terminal, no diretório public, execute o seguinte comando:
-
-Bash
-
-
-cd public
-npm run dev
-
-
-
-O frontend estará acessível em http://localhost:5173.
-
-Estrutura do Projeto
-
-Plain Text
-
-
-Health_Life/
-├── backend/                  # Código do backend (FastAPI, lógica de ML )
-│   ├── data/                 # Dados utilizados pelo modelo de ML
-│   ├── limpeza.py            # Script para limpeza e pré-processamento de dados
-│   ├── busca_textual.py      # Lógica para busca textual de alimentos
-│   ├── similaridade.py       # Implementação da similaridade de cosseno
-│   ├── rankObjetivo.py       # Lógica para ranking de alimentos por objetivo
-│   ├── resultado.py          # Funções para gerar recomendações e calcular gasto calórico
-│   ├── main.py               # Aplicação FastAPI e endpoints da API
-│   └── requirements.txt      # Dependências Python
-├── public/                   # Código do frontend (React, TypeScript)
-│   ├── src/                  # Componentes React, lógica do frontend
-│   ├── index.html            # Arquivo HTML principal
-│   ├── package.json          # Dependências e scripts do frontend
-│   └── ...                   # Outros arquivos de configuração e assets do frontend
-├── README.md                 # Este arquivo
-└── .gitignore                # Arquivos e diretórios a serem ignorados pelo Git
-
-
-
-Contribuição
-
-Contribuições são bem-vindas! Se você deseja contribuir para o projeto, por favor, siga estas etapas:
-
-1.
-Faça um fork do repositório.
-
-2.
-Crie uma nova branch (git checkout -b feature/sua-feature).
-
-3.
-Faça suas alterações e commit (git commit -m 'Adiciona nova feature').
-
-4.
-Envie para a branch (git push origin feature/sua-feature).
-
-5.
-Abra um Pull Request.
-
-
-
-# Projeto ML-Data
-
-Sistema de recomendação de alimentos usando Machine Learning com backend em FastAPI e frontend em React.
+# Health Life
+
+Sistema de recomendação de alimentos com Machine Learning. Você informa um alimento e, opcionalmente, um objetivo nutricional (ex.: mais proteína, menos sódio), e o sistema sugere alimentos nutricionalmente parecidos. Também estima quanto tempo de atividade física é preciso para gastar as calorias de um alimento.
+
+- **Backend:** Python + FastAPI
+- **Frontend:** React + TypeScript (Vite)
+- **Dados:** tabela de composição nutricional com 597 alimentos ([backend/data/alimentos.csv](backend/data/alimentos.csv))
+
+## Funcionalidades
+
+- **Busca textual tolerante:** encontra o alimento mesmo sem acentos ou com a descrição incompleta (ex.: `frango grelhado`).
+- **Recomendação por similaridade:** compara 16 nutrientes (energia, proteína, lipídeos, carboidrato, fibra, minerais e vitaminas) usando similaridade de cosseno.
+- **Ranking por objetivo:** reordena as recomendações conforme o objetivo escolhido.
+- **Gasto calórico:** calcula os minutos de caminhada, corrida, ciclismo, natação e musculação necessários para gastar as calorias do alimento, com base no peso do usuário.
+
+## Como funciona
+
+1. **Limpeza dos dados** ([limpeza.py](backend/limpeza.py)): seleciona as colunas nutricionais, preenche valores nulos com a média (ou mediana) da categoria do alimento e remove carnes cruas.
+2. **Busca** ([busca_textual.py](backend/busca_textual.py)): normaliza o texto (minúsculas, sem acentos e stopwords) e pontua cada alimento pela quantidade de palavras em comum com a busca, com bônus quando o modo de preparo coincide (cru, cozido, grelhado...).
+3. **Similaridade** ([similaridade.py](backend/similaridade.py), [resultado.py](backend/resultado.py)): os nutrientes são padronizados com `StandardScaler` e comparados com similaridade de cosseno.
+4. **Ranking** ([rankObjetivo.py](backend/rankObjetivo.py)): dos 50 alimentos mais parecidos, mantém só os de categorias compatíveis (ex.: carnes com carnes e pratos preparados) e retorna os 10 melhores — por similaridade ou, se houver objetivo, pelo nutriente do objetivo.
+5. **Gasto calórico** ([limpeza.py](backend/limpeza.py)): `tempo (min) = calorias / (MET × peso) × 60`.
+
+### Objetivos disponíveis
+
+| Objetivo | Nutriente | Ordem |
+| --- | --- | --- |
+| `menos_calorias` | Energia (kcal) | menor primeiro |
+| `mais_proteina` | Proteína (g) | maior primeiro |
+| `menos_gordura` | Lipídeos (g) | menor primeiro |
+| `menos_carboidrato` | Carboidrato (g) | menor primeiro |
+| `mais_fibra` | Fibra alimentar (g) | maior primeiro |
+| `menos_sodio` | Sódio (mg) | menor primeiro |
+| `mais_calcio` | Cálcio (mg) | maior primeiro |
+| `mais_ferro` | Ferro (mg) | maior primeiro |
+| `mais_potassio` | Potássio (mg) | maior primeiro |
+| `mais_vitamina_c` | Vitamina C (mg) | maior primeiro |
 
 ## Pré-requisitos
 
 - Python 3.10+
-- Node.js 18+
+- Node.js 18+ e npm
 
 ## Instalação
 
-### Backend
+```bash
+git clone https://github.com/pedroedu06/Health_Life.git
+cd Health_Life
+```
+
+**Backend** (na raiz do projeto, onde fica o `requirements.txt`):
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### Frontend
+**Frontend:**
 
 ```bash
 cd public
@@ -234,20 +63,103 @@ npm install
 
 ## Como rodar
 
-### Backend
+Use dois terminais.
+
+**1. Backend** — disponível em `http://localhost:8000` (documentação interativa em `http://localhost:8000/docs`):
 
 ```bash
 cd backend
 python -m uvicorn main:app --reload
 ```
 
-O servidor estará disponível em `http://localhost:8000`.
-
-### Frontend
+**2. Frontend** — disponível em `http://localhost:5173`:
 
 ```bash
 cd public
 npm run dev
 ```
 
-O frontend estará disponível em `http://localhost:5173`.
+> O backend só aceita requisições (CORS) de `http://localhost:5173` e `http://localhost:5174`. Se o Vite subir em outra porta, ajuste `allow_origins` em [main.py](backend/main.py).
+
+## API
+
+### `POST /recomendar`
+
+```json
+{ "alimento": "frango grelhado", "objetivo": "mais_proteina" }
+```
+
+`objetivo` é opcional; sem ele, o ranking é feito só por similaridade. Resposta:
+
+```json
+{
+  "alimento_base": "Frango, coração, grelhado",
+  "objetivo": "mais_proteina",
+  "resultados": [
+    {
+      "indice": 335,
+      "nome": "Carne, bovina, contra-filé, sem gordura, grelhado",
+      "similaridade": 0.735,
+      "valor_objetivo": 35.9,
+      "objetivo": "mais_proteina",
+      "score_final": 1.0
+    }
+  ]
+}
+```
+
+`valor_objetivo`, `objetivo` e `score_final` só aparecem quando um objetivo é informado.
+
+### `POST /gastoCalorico`
+
+```json
+{ "alimento": "arroz integral cozido", "peso": 72 }
+```
+
+Resposta (minutos por atividade):
+
+```json
+{
+  "caminhada": 30,
+  "corrida": 13,
+  "ciclismo": 17,
+  "natacao": 15,
+  "musculacao": 21,
+  "alimento_base": "Arroz, integral, cozido",
+  "calorias": 124.0
+}
+```
+
+## Estrutura do projeto
+
+```
+Health_Life/
+├── requirements.txt        # Dependências Python
+├── backend/
+│   ├── data/alimentos.csv  # Base de dados nutricional
+│   ├── main.py             # App FastAPI e endpoints
+│   ├── limpeza.py          # Carga/limpeza dos dados e cálculo de gasto calórico
+│   ├── busca_textual.py    # Busca do alimento pelo nome
+│   ├── similaridade.py     # Normalização dos nutrientes (StandardScaler)
+│   ├── resultado.py        # Monta a recomendação (similaridade de cosseno)
+│   └── rankObjetivo.py     # Filtro por categoria e ranking por objetivo
+└── public/                 # Frontend React + TypeScript (Vite)
+    ├── index.html
+    ├── package.json
+    └── src/
+        ├── App.tsx                   # Tela principal (formulários e gasto calórico)
+        └── components/RankingList.tsx # Lista do ranking
+```
+
+## Tecnologias
+
+- **Backend:** FastAPI, Uvicorn, Pydantic, pandas, scikit-learn, Unidecode
+- **Frontend:** React 19, TypeScript, Vite, ESLint
+
+## Contribuição
+
+1. Faça um fork do repositório.
+2. Crie uma branch: `git checkout -b feature/sua-feature`
+3. Faça commit das alterações: `git commit -m "Adiciona nova feature"`
+4. Envie a branch: `git push origin feature/sua-feature`
+5. Abra um Pull Request.
