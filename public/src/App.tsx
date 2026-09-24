@@ -100,7 +100,7 @@ function App() {
       const response = await fetch('http://localhost:8000/gastoCalorico', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ alimento, peso: parseFloat(peso) }),
+        body: JSON.stringify({ alimento, peso: Number.parseFloat(peso) }),
       })
 
       if (!response.ok) {
@@ -323,7 +323,7 @@ function App() {
                   <p className="ranking-header-label">Carregando ranking...</p>
                 </div>
                 <div className="skeleton-list">
-                  {[...Array(6)].map((_, i) => (
+                  {[...new Array(6)].map((_, i) => (
                     <div key={i} className="glass-card skeleton-card">
                       <div className="skeleton-badge" />
                       <div className="skeleton-content">
