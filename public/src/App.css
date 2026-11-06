@@ -179,7 +179,7 @@
   border-radius: var(--radius-input);
   background: rgba(200, 60, 60, 0.12);
   border: 1px solid rgba(200, 60, 60, 0.3);
-  color: #e88;
+  color: #ffefef;
   font-size: 0.85rem;
 }
 
