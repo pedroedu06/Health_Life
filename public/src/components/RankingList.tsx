@@ -32,7 +32,7 @@ function getBadgeClass(position: number): string {
   return 'rank-badge rank-badge--default'
 }
 
-function RankingList({ resposta, alimentoBase, option, objetivos, rankingRef }: RankingListProps) {
+function RankingList({ resposta, alimentoBase, option, objetivos, rankingRef }: Readonly<RankingListProps>) {
   const hasGoal = !!option && !!objetivos[option]
 
   const scorePercent = (item: ResultItem) => {
