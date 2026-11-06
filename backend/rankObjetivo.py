@@ -37,7 +37,7 @@ objetivos = {
         "mais_vitamina_c":   ("Vitamina.C..mg.",     "desc"),
     }
 
-def rankear_por_objetivo(df, indice_base, x_normalizado, similaridades, objetivo=None, pool=50, top_n=10):
+def rankear_por_objetivo(df, indice_base, similaridades, objetivo=None, pool=50, top_n=10):
     ranking_bruto = similaridades.argsort()[::-1]
     categoria_base = df.iloc[indice_base]["Categoria do alimento"]
     categorias_permitidas = GRUPOS_SIMILARES.get(categoria_base, [categoria_base])

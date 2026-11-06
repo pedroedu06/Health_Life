@@ -27,7 +27,6 @@ def recomendar_alimentos(nome_alimento, objetivo):
             df,
             indice_base=indice_base,
             similaridades=similaridades,
-            x_normalizado=x_normalizado,
             objetivo=objetivo
         )
 

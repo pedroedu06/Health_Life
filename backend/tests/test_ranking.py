@@ -37,14 +37,14 @@ def similaridades():
 
 
 def test_ranking_sem_objetivo_tem_no_maximo_10_itens(df_frutas, similaridades):
-    resultados = rankear_por_objetivo(df_frutas, 0, None, similaridades)
+    resultados = rankear_por_objetivo(df_frutas, 0, similaridades)
 
     assert [r["nome"] for r in resultados] == [f"Fruta {i}" for i in range(1, 11)]
 
 
 def test_ranking_com_objetivo_tem_no_maximo_10_itens(df_frutas, similaridades):
     resultados = rankear_por_objetivo(
-        df_frutas, 0, None, similaridades, objetivo="mais_proteina"
+        df_frutas, 0, similaridades, objetivo="mais_proteina"
     )
 
     assert len(resultados) == 10
@@ -52,7 +52,7 @@ def test_ranking_com_objetivo_tem_no_maximo_10_itens(df_frutas, similaridades):
 
 def test_objetivo_mais_proteina_ordena_do_maior_para_o_menor(df_frutas, similaridades):
     resultados = rankear_por_objetivo(
-        df_frutas, 0, None, similaridades, objetivo="mais_proteina"
+        df_frutas, 0, similaridades, objetivo="mais_proteina"
     )
 
     assert [r["valor_objetivo"] for r in resultados] == [
@@ -63,7 +63,7 @@ def test_objetivo_mais_proteina_ordena_do_maior_para_o_menor(df_frutas, similari
 
 def test_objetivo_menos_calorias_ordena_do_menor_para_o_maior(df_frutas, similaridades):
     resultados = rankear_por_objetivo(
-        df_frutas, 0, None, similaridades, objetivo="menos_calorias"
+        df_frutas, 0, similaridades, objetivo="menos_calorias"
     )
 
     assert [r["valor_objetivo"] for r in resultados][:3] == [101.0, 102.0, 103.0]
@@ -72,7 +72,7 @@ def test_objetivo_menos_calorias_ordena_do_menor_para_o_maior(df_frutas, similar
 
 def test_objetivo_desconhecido_cai_na_ordem_por_similaridade(df_frutas, similaridades):
     resultados = rankear_por_objetivo(
-        df_frutas, 0, None, similaridades, objetivo="objetivo_inventado"
+        df_frutas, 0, similaridades, objetivo="objetivo_inventado"
     )
 
     assert resultados[0]["nome"] == "Fruta 1"
@@ -86,7 +86,7 @@ def test_ranking_exclui_categorias_fora_do_grupo():
         ("Frutas e derivados", "Maçã, Fuji, com casca, crua", 0.3, 56.0),
     ])
 
-    resultados = rankear_por_objetivo(df, 0, None, np.array([1.0, 0.9, 0.5]))
+    resultados = rankear_por_objetivo(df, 0, np.array([1.0, 0.9, 0.5]))
 
     assert [r["nome"] for r in resultados] == ["Maçã, Fuji, com casca, crua"]
 
@@ -116,7 +116,7 @@ def test_alimento_base_nao_aparece_nas_proprias_recomendacoes():
     vetores = np.array([[1.0, 0.0], [1.0, 0.0], [1.0, 1.0]])
     similaridades = cosine_similarity([vetores[0]], vetores)[0]
 
-    resultados = rankear_por_objetivo(df, 0, vetores, similaridades)
+    resultados = rankear_por_objetivo(df, 0, similaridades)
 
     assert "Óleo, de soja" not in [r["nome"] for r in resultados]
 
@@ -128,7 +128,7 @@ def test_objetivo_sem_candidatos_na_categoria_retorna_vazio():
     ])
 
     resultados = rankear_por_objetivo(
-        df, 0, None, np.array([1.0, 0.9]), objetivo="mais_proteina"
+        df, 0, np.array([1.0, 0.9]), objetivo="mais_proteina"
     )
 
     assert resultados == []
