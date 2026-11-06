@@ -3,9 +3,9 @@ from typing import Optional
 from pydantic import BaseModel
 from resultado import recomendar_alimentos
 from fastapi.middleware.cors import CORSMiddleware
-from limpeza import carregarDados, calcularTempoGasto, getCaloriasporAlimento
+from limpeza import carregar_dados, calcularTempoGasto, get_calorias_por_alimento
 
-df, colunas_nutricionais, X = carregarDados()
+df, colunas_nutricionais, X = carregar_dados()
 
 class alimento(BaseModel):
     alimento: str
@@ -36,7 +36,7 @@ def comparar(data: alimento):
 
 @app.post('/gastoCalorico')
 def gasto(data: gastoCalorico):
-    calorias, descricao = getCaloriasporAlimento(df, data.alimento)
+    calorias, descricao = get_calorias_por_alimento(df, data.alimento)
     tempos = calcularTempoGasto(calorias, data.peso)
     tempos["alimento_base"] = descricao
     tempos["calorias"] = round(calorias, 1)

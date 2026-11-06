@@ -1,4 +1,4 @@
-from limpeza import carregarDados
+from limpeza import carregar_dados
 from busca_textual import preparar_dataframe
 from busca_textual import buscar_alimento
 from similaridade import x_normalizado
@@ -6,7 +6,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 from rankObjetivo import rankear_por_objetivo
 
 def recomendar_alimentos(nome_alimento, objetivo):
-    df, colunas_nutricionais, X = carregarDados()
+    df, colunas_nutricionais, X = carregar_dados()
     df = preparar_dataframe(df)
 
     resultado = buscar_alimento(

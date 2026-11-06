@@ -5,7 +5,7 @@ from constants import COL_FOOD_CATEGORY, COL_FOOD_DESCRIPTION
 
  
 base_path = os.path.dirname(__file__)
-def carregarDados():
+def carregar_dados():
     df = pd.read_csv(os.path.join(base_path, './data/alimentos.csv'))
 
     # limpeza de colunas principais usadas na aplicacao.
@@ -52,7 +52,7 @@ def carregarDados():
 
     return df, colunas_nutricionais, X
 
-def getCaloriasporAlimento(df, nome_alimento):
+def get_calorias_por_alimento(df, nome_alimento):
     from busca_textual import preparar_dataframe, buscar_alimento
 
     df_preparado = preparar_dataframe(df.copy())
