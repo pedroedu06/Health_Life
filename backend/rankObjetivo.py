@@ -74,9 +74,6 @@ def rankear_por_objetivo(df, indice_base, similaridades, objetivo=None, pool=50,
     # Pega os top_n já ordenados pelo objetivo
     top_pares = pares[:int(top_n)]
 
-    # Recalcula min/max apenas do top para o score visual (barra de progresso)
-    top_valores = [v for _, v in top_pares]
-
     resultados = []
     for inx, valor in top_pares:
         linha = df.iloc[inx]

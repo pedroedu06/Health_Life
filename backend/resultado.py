@@ -6,7 +6,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 from rankObjetivo import rankear_por_objetivo
 
 def recomendar_alimentos(nome_alimento, objetivo):
-    df, colunas_nutricionais, X = carregar_dados()
+    df, _, _ = carregar_dados()
     df = preparar_dataframe(df)
 
     resultado = buscar_alimento(

@@ -17,10 +17,6 @@ def carregar_dados():
 
     df = df[[COL_FOOD_CATEGORY, COL_FOOD_DESCRIPTION] + colunas_nutricionais]
 
-        #nova verificacao de dados nulos apos limpeza de colunas.
-    nulos = (df.isnull().sum() / len(df) *100).sort_values(ascending=False)
-        # print(nulos[nulos>0]);
-
     colunas_baixo_nulos = [
             "Energia..kcal.", "Lipídeos..g.", "Sódio..mg.", "Potássio..mg.", "Ferro..mg.",
             "Fósforo..mg.", "Magnésio..mg.", "Carboidrato..g.", "Proteína..g.", "Cálcio..mg.", 
@@ -45,8 +41,6 @@ def carregar_dados():
     descricao_lower = df[COL_FOOD_DESCRIPTION].str.lower()
     is_cru = descricao_lower.str.endswith(('cru', 'crua', 'cruas', 'cruo', 'cruos'))
     df = df[~(is_carne & is_cru)].reset_index(drop=True)
-
-    indetificadores = df[[COL_FOOD_DESCRIPTION, COL_FOOD_CATEGORY]].copy()
 
     X = df[colunas_nutricionais].to_numpy(dtype=float)
 
