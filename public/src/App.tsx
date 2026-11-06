@@ -33,6 +33,8 @@ interface GastoResult {
 
 type UIState = 'idle' | 'loading' | 'success' | 'error' | 'empty'
 
+const SKELETON_KEYS = ['skeleton-1', 'skeleton-2', 'skeleton-3', 'skeleton-4', 'skeleton-5', 'skeleton-6']
+
 function App() {
   const [alimento, setAlimento] = useState('')
   const [option, setOption] = useState('')
@@ -323,8 +325,8 @@ function App() {
                   <p className="ranking-header-label">Carregando ranking...</p>
                 </div>
                 <div className="skeleton-list">
-                  {[...new Array(6)].map((_, i) => (
-                    <div key={i} className="glass-card skeleton-card">
+                  {SKELETON_KEYS.map((skeletonKey) => (
+                    <div key={skeletonKey} className="glass-card skeleton-card">
                       <div className="skeleton-badge" />
                       <div className="skeleton-content">
                         <div className="skeleton-line skeleton-line--title" />
