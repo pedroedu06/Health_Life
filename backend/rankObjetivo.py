@@ -1,17 +1,25 @@
+from constants import (
+    CATEGORY_CEREALS,
+    CATEGORY_EGGS,
+    CATEGORY_MISCELLANEOUS,
+    CATEGORY_OTHER_INDUSTRIALIZED_FOODS,
+    CATEGORY_PREPARED_FOODS,
+)
+
 GRUPOS_SIMILARES = {
-    "Cereais e derivados":                  ["Cereais e derivados", "Alimentos preparados", "Outros alimentos industrializados"],
+    CATEGORY_CEREALS:                       [CATEGORY_CEREALS, CATEGORY_PREPARED_FOODS, CATEGORY_OTHER_INDUSTRIALIZED_FOODS],
     "Verduras, hortaliças e derivados":     ["Verduras, hortaliças e derivados"],
     "Frutas e derivados":                   ["Frutas e derivados"],
     "Gorduras e óleos":                     ["Gorduras e óleos", "Nozes e sementes"],
     "Pescados e frutos do mar":             ["Pescados e frutos do mar"],
-    "Carnes e derivados":                   ["Carnes e derivados", "Alimentos preparados"],
-    "Leite e derivados":                    ["Leite e derivados", "Ovos e derivados"],
+    "Carnes e derivados":                   ["Carnes e derivados", CATEGORY_PREPARED_FOODS],
+    "Leite e derivados":                    ["Leite e derivados", CATEGORY_EGGS],
     "Bebidas (alcoólicas e não alcoólicas)":["Bebidas (alcoólicas e não alcoólicas)"],
-    "Ovos e derivados":                     ["Ovos e derivados", "Leite e derivados"],
-    "Produtos açucarados":                  ["Produtos açucarados", "Cereais e derivados"],
-    "Miscelâneas":                          ["Miscelâneas", "Alimentos preparados", "Outros alimentos industrializados"],
-    "Outros alimentos industrializados":    ["Outros alimentos industrializados", "Miscelâneas", "Alimentos preparados"],
-    "Alimentos preparados":                 ["Alimentos preparados", "Cereais e derivados", "Miscelâneas", "Outros alimentos industrializados"],
+    CATEGORY_EGGS:                          [CATEGORY_EGGS, "Leite e derivados"],
+    "Produtos açucarados":                  ["Produtos açucarados", CATEGORY_CEREALS],
+    CATEGORY_MISCELLANEOUS:                 [CATEGORY_MISCELLANEOUS, CATEGORY_PREPARED_FOODS, CATEGORY_OTHER_INDUSTRIALIZED_FOODS],
+    CATEGORY_OTHER_INDUSTRIALIZED_FOODS:    [CATEGORY_OTHER_INDUSTRIALIZED_FOODS, CATEGORY_MISCELLANEOUS, CATEGORY_PREPARED_FOODS],
+    CATEGORY_PREPARED_FOODS:                [CATEGORY_PREPARED_FOODS, CATEGORY_CEREALS, CATEGORY_MISCELLANEOUS, CATEGORY_OTHER_INDUSTRIALIZED_FOODS],
     "Leguminosas e derivados":              ["Leguminosas e derivados"],
     "Nozes e sementes":                     ["Nozes e sementes", "Gorduras e óleos"],
 }

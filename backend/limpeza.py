@@ -1,6 +1,8 @@
 import pandas as pd
 import os
 
+from constants import COL_FOOD_CATEGORY, COL_FOOD_DESCRIPTION
+
  
 base_path = os.path.dirname(__file__)
 def carregarDados():
@@ -13,7 +15,7 @@ def carregarDados():
             'Tiamina..mg.', 'Riboflavina..mg.', 'Niacina..mg.', 'Piridoxina..mg.', 'Vitamina.C..mg.'
         ]
 
-    df = df[['Categoria do alimento', 'Descrição dos alimentos'] + colunas_nutricionais]
+    df = df[[COL_FOOD_CATEGORY, COL_FOOD_DESCRIPTION] + colunas_nutricionais]
 
         #nova verificacao de dados nulos apos limpeza de colunas.
     nulos = (df.isnull().sum() / len(df) *100).sort_values(ascending=False)
@@ -26,25 +28,25 @@ def carregarDados():
         ]
 
         #retirando valores nulls
-    df[colunas_baixo_nulos] = df.groupby('Categoria do alimento')[colunas_baixo_nulos].transform(
+    df[colunas_baixo_nulos] = df.groupby(COL_FOOD_CATEGORY)[colunas_baixo_nulos].transform(
             lambda x: x.fillna(x.mean())
         )
 
     colunas_alto_nulos = ['Fibra.Alimentar..g.', 'Vitamina.C..mg.']
 
-    df[colunas_alto_nulos] = df.groupby('Categoria do alimento')[colunas_alto_nulos].transform(
+    df[colunas_alto_nulos] = df.groupby(COL_FOOD_CATEGORY)[colunas_alto_nulos].transform(
             lambda x: x.fillna(x.median())
         )
 
     df[colunas_alto_nulos] = df[colunas_alto_nulos].fillna(df[colunas_alto_nulos].median())
 
     # Filtra alimentos crus na categoria de carnes
-    is_carne = df['Categoria do alimento'] == 'Carnes e derivados'
-    descricao_lower = df['Descrição dos alimentos'].str.lower()
+    is_carne = df[COL_FOOD_CATEGORY] == 'Carnes e derivados'
+    descricao_lower = df[COL_FOOD_DESCRIPTION].str.lower()
     is_cru = descricao_lower.str.endswith(('cru', 'crua', 'cruas', 'cruo', 'cruos'))
     df = df[~(is_carne & is_cru)].reset_index(drop=True)
 
-    indetificadores = df[['Descrição dos alimentos', 'Categoria do alimento']].copy()
+    indetificadores = df[[COL_FOOD_DESCRIPTION, COL_FOOD_CATEGORY]].copy()
 
     X = df[colunas_nutricionais].to_numpy(dtype=float)
 
@@ -61,7 +63,7 @@ def getCaloriasporAlimento(df, nome_alimento):
 
     indice = resultados[0]['indice']
     calorias = df.iloc[indice]['Energia..kcal.']
-    descricao = df.iloc[indice]['Descrição dos alimentos']
+    descricao = df.iloc[indice][COL_FOOD_DESCRIPTION]
     return calorias, descricao
 
 def calcularTempoGasto(calorias, peso_kg):
