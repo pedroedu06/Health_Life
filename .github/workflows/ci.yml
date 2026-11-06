@@ -16,7 +16,7 @@ jobs:
           python-version: "3.11"
 
       - name: Instalar dependencias
-        run: pip install -r requirements.txt pytest pytest-cov
+        run: pip install --only-binary :all: --require-hashes -r requirements-ci.lock
 
       - name: Rodar testes
         working-directory: backend
