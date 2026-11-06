@@ -4,7 +4,7 @@ Sistema de recomendação de alimentos com Machine Learning. Você informa um al
 
 - **Backend:** Python + FastAPI
 - **Frontend:** React + TypeScript (Vite)
-- **Dados:** tabela de composição nutricional com 597 alimentos ([backend/data/alimentos.csv](backend/data/alimentos.csv))
+- **Dados:** TACO, com 597 alimentos (veja [Dados nutricionais](#dados-nutricionais))
 
 ## Funcionalidades
 
@@ -35,6 +35,31 @@ Sistema de recomendação de alimentos com Machine Learning. Você informa um al
 | `mais_ferro` | Ferro (mg) | maior primeiro |
 | `mais_potassio` | Potássio (mg) | maior primeiro |
 | `mais_vitamina_c` | Vitamina C (mg) | maior primeiro |
+
+## Dados nutricionais
+
+A base vem da TACO (Tabela Brasileira de Composição de Alimentos), publicada pelo NEPA/UNICAMP.
+
+| Item | Valor |
+| --- | --- |
+| Edição da TACO | **TODO:** confirmar a edição usada |
+| Fonte | TACO, NEPA/UNICAMP. **TODO:** informar o link de onde o CSV foi obtido |
+| Arquivo | `alimentos.csv` |
+| Local | [backend/data/](backend/data/alimentos.csv) |
+| Conteúdo | 597 alimentos, 15 categorias e 29 colunas (UTF-8, fim de linha LF) |
+| SHA-256 | `8c0f7c701eadc9d2afa2711688e3d9523a3a2ad0c1ebcf1fa2fc9e6d08f916ab` |
+
+Para conferir o checksum, na raiz do projeto:
+
+```bash
+sha256sum backend/data/alimentos.csv
+```
+
+> No Windows com `core.autocrlf=true`, o Git troca LF por CRLF no checkout e o comando acima retorna outro valor (`248464f4...`). Nesse caso, confira a versão versionada no Git Bash:
+>
+> ```bash
+> git show HEAD:backend/data/alimentos.csv | sha256sum
+> ```
 
 ## Pré-requisitos
 
@@ -83,13 +108,29 @@ npm run dev
 
 ## API
 
+Base local: `http://localhost:8000`. As requisições e respostas usam JSON.
+
+| Método | Rota | Descrição |
+| --- | --- | --- |
+| `POST` | `/recomendar` | Recomenda alimentos parecidos com o informado |
+| `POST` | `/gastoCalorico` | Calcula os minutos de atividade para gastar as calorias do alimento |
+
+O FastAPI também serve a documentação em `/docs`, `/redoc` e `/openapi.json`.
+
 ### `POST /recomendar`
 
-```json
-{ "alimento": "frango grelhado", "objetivo": "mais_proteina" }
+| Parâmetro | Tipo | Obrigatório | Descrição |
+| --- | --- | --- | --- |
+| `alimento` | string | sim | Nome do alimento buscado |
+| `objetivo` | string | não | Um dos [objetivos disponíveis](#objetivos-disponíveis). Valor ausente ou desconhecido ordena só por similaridade |
+
+Requisição:
+
+```bash
+curl -X POST http://localhost:8000/recomendar -H "Content-Type: application/json" -d '{"alimento": "frango grelhado", "objetivo": "mais_proteina"}'
 ```
 
-`objetivo` é opcional; sem ele, o ranking é feito só por similaridade. Resposta:
+Resposta (`200`), com até 10 itens em `resultados` (aqui, só o primeiro):
 
 ```json
 {
@@ -108,15 +149,24 @@ npm run dev
 }
 ```
 
-`valor_objetivo`, `objetivo` e `score_final` só aparecem quando um objetivo é informado.
+`valor_objetivo`, `objetivo` e `score_final` só aparecem nos itens quando um objetivo válido é informado. Sem objetivo, o campo `objetivo` da raiz volta como `""`.
+
+Se nenhum alimento combinar com a busca, a rota não retorna erro: ela usa o primeiro alimento da base (`Arroz, integral, cozido`) como `alimento_base`.
 
 ### `POST /gastoCalorico`
 
-```json
-{ "alimento": "arroz integral cozido", "peso": 72 }
+| Parâmetro | Tipo | Obrigatório | Descrição |
+| --- | --- | --- | --- |
+| `alimento` | string | sim | Nome do alimento buscado |
+| `peso` | número | sim | Peso do usuário em kg, maior que zero |
+
+Requisição:
+
+```bash
+curl -X POST http://localhost:8000/gastoCalorico -H "Content-Type: application/json" -d '{"alimento": "arroz integral cozido", "peso": 72}'
 ```
 
-Resposta (minutos por atividade):
+Resposta (`200`), com os minutos por atividade:
 
 ```json
 {
@@ -128,6 +178,23 @@ Resposta (minutos por atividade):
   "alimento_base": "Arroz, integral, cozido",
   "calorias": 124.0
 }
+```
+
+Alimento não encontrado ou `peso` igual a zero retornam `500`.
+
+### Erros de validação
+
+Nas duas rotas, um campo obrigatório ausente ou de tipo inválido retorna `422` com os detalhes em `detail`.
+
+## Testes
+
+Versão do Python usada na execução dos testes: **3.14.0**.
+
+As dependências de teste (`pytest` e `pytest-cov`) estão no `requirements.txt`. Para rodar os testes com cobertura:
+
+```bash
+cd backend
+pytest --cov
 ```
 
 ## Estrutura do projeto
