@@ -11,7 +11,7 @@ class alimento(BaseModel):
     alimento: str
     objetivo: Optional[str] = ""
 
-class gastoCalorico(BaseModel):
+class GastoCalorico(BaseModel):
     alimento: str
     peso: float
 
@@ -35,7 +35,7 @@ def comparar(data: alimento):
     return resultado
 
 @app.post('/gastoCalorico')
-def gasto(data: gastoCalorico):
+def gasto(data: GastoCalorico):
     calorias, descricao = get_calorias_por_alimento(df, data.alimento)
     tempos = calcularTempoGasto(calorias, data.peso)
     tempos["alimento_base"] = descricao
