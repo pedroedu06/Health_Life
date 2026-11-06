@@ -4,3 +4,5 @@ pandas
 scikit-learn
 unidecode
 pydantic
+pytest
+pytest-cov
