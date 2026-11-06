@@ -1,7 +1,7 @@
 import pandas as pd
 import pytest
 
-from limpeza import calcularTempoGasto, getCaloriasporAlimento
+from limpeza import calcularTempoGasto, get_calorias_por_alimento
 
 
 def test_tempo_gasto_calculado_por_atividade():
@@ -49,9 +49,9 @@ def df_calorias():
 
 
 def test_get_calorias_retorna_energia_e_descricao(df_calorias):
-    assert getCaloriasporAlimento(df_calorias, "banana") == (98.0, "Banana, prata, crua")
+    assert get_calorias_por_alimento(df_calorias, "banana") == (98.0, "Banana, prata, crua")
 
 
 def test_get_calorias_de_alimento_inexistente_levanta_erro(df_calorias):
     with pytest.raises(ValueError, match="xyzabc"):
-        getCaloriasporAlimento(df_calorias, "xyzabc")
+        get_calorias_por_alimento(df_calorias, "xyzabc")

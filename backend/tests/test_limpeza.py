@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from limpeza import carregarDados
+from limpeza import carregar_dados
 
 COLUNAS_NUTRICIONAIS = [
     "Energia..kcal.", "Proteína..g.", "Lipídeos..g.", "Carboidrato..g.",
@@ -13,7 +13,7 @@ COLUNAS_NUTRICIONAIS = [
 
 @pytest.fixture(scope="module")
 def dados():
-    return carregarDados()
+    return carregar_dados()
 
 
 def test_carregar_dados_retorna_colunas_esperadas(dados):

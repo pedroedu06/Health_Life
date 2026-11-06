@@ -1,17 +1,25 @@
+from constants import (
+    CATEGORY_CEREALS,
+    CATEGORY_EGGS,
+    CATEGORY_MISCELLANEOUS,
+    CATEGORY_OTHER_INDUSTRIALIZED_FOODS,
+    CATEGORY_PREPARED_FOODS,
+)
+
 GRUPOS_SIMILARES = {
-    "Cereais e derivados":                  ["Cereais e derivados", "Alimentos preparados", "Outros alimentos industrializados"],
+    CATEGORY_CEREALS:                       [CATEGORY_CEREALS, CATEGORY_PREPARED_FOODS, CATEGORY_OTHER_INDUSTRIALIZED_FOODS],
     "Verduras, hortaliças e derivados":     ["Verduras, hortaliças e derivados"],
     "Frutas e derivados":                   ["Frutas e derivados"],
     "Gorduras e óleos":                     ["Gorduras e óleos", "Nozes e sementes"],
     "Pescados e frutos do mar":             ["Pescados e frutos do mar"],
-    "Carnes e derivados":                   ["Carnes e derivados", "Alimentos preparados"],
-    "Leite e derivados":                    ["Leite e derivados", "Ovos e derivados"],
+    "Carnes e derivados":                   ["Carnes e derivados", CATEGORY_PREPARED_FOODS],
+    "Leite e derivados":                    ["Leite e derivados", CATEGORY_EGGS],
     "Bebidas (alcoólicas e não alcoólicas)":["Bebidas (alcoólicas e não alcoólicas)"],
-    "Ovos e derivados":                     ["Ovos e derivados", "Leite e derivados"],
-    "Produtos açucarados":                  ["Produtos açucarados", "Cereais e derivados"],
-    "Miscelâneas":                          ["Miscelâneas", "Alimentos preparados", "Outros alimentos industrializados"],
-    "Outros alimentos industrializados":    ["Outros alimentos industrializados", "Miscelâneas", "Alimentos preparados"],
-    "Alimentos preparados":                 ["Alimentos preparados", "Cereais e derivados", "Miscelâneas", "Outros alimentos industrializados"],
+    CATEGORY_EGGS:                          [CATEGORY_EGGS, "Leite e derivados"],
+    "Produtos açucarados":                  ["Produtos açucarados", CATEGORY_CEREALS],
+    CATEGORY_MISCELLANEOUS:                 [CATEGORY_MISCELLANEOUS, CATEGORY_PREPARED_FOODS, CATEGORY_OTHER_INDUSTRIALIZED_FOODS],
+    CATEGORY_OTHER_INDUSTRIALIZED_FOODS:    [CATEGORY_OTHER_INDUSTRIALIZED_FOODS, CATEGORY_MISCELLANEOUS, CATEGORY_PREPARED_FOODS],
+    CATEGORY_PREPARED_FOODS:                [CATEGORY_PREPARED_FOODS, CATEGORY_CEREALS, CATEGORY_MISCELLANEOUS, CATEGORY_OTHER_INDUSTRIALIZED_FOODS],
     "Leguminosas e derivados":              ["Leguminosas e derivados"],
     "Nozes e sementes":                     ["Nozes e sementes", "Gorduras e óleos"],
 }
@@ -29,7 +37,7 @@ objetivos = {
         "mais_vitamina_c":   ("Vitamina.C..mg.",     "desc"),
     }
 
-def rankear_por_objetivo(df, indice_base, x_normalizado, similaridades, objetivo=None, pool=50, top_n=10):
+def rankear_por_objetivo(df, indice_base, similaridades, objetivo=None, pool=50, top_n=10):
     ranking_bruto = similaridades.argsort()[::-1]
     categoria_base = df.iloc[indice_base]["Categoria do alimento"]
     categorias_permitidas = GRUPOS_SIMILARES.get(categoria_base, [categoria_base])
@@ -65,9 +73,6 @@ def rankear_por_objetivo(df, indice_base, x_normalizado, similaridades, objetivo
 
     # Pega os top_n já ordenados pelo objetivo
     top_pares = pares[:int(top_n)]
-
-    # Recalcula min/max apenas do top para o score visual (barra de progresso)
-    top_valores = [v for _, v in top_pares]
 
     resultados = []
     for inx, valor in top_pares:
